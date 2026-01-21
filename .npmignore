@@ -1,0 +1,50 @@
+# Source files (TypeScript)
+src/
+tests/
+coverage/
+
+# Configuration files
+.env
+.env.example
+.env.*
+tsconfig.json
+tsconfig.lint.json
+vitest.config.ts
+eslint.config.js
+.prettierrc
+.prettierignore
+.editorconfig
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# Development files
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation (keep only README.md)
+PUBLISHING.md
+.claude/
+
+# CI/CD
+.husky/
+.github/workflows/
+
+# Test files
+*.test.ts
+*.spec.ts
+
+# Build artifacts (keep dist/)
+# dist/ is needed for the package to work

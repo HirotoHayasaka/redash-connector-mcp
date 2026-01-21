@@ -1,0 +1,78 @@
+{
+  "name": "redash-connector-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Redash integration",
+  "type": "module",
+  "bin": {
+    "redash-connector-mcp": "dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npx tsc && chmod +x dist/index.js",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "redash",
+    "mcp",
+    "ai",
+    "claude",
+    "claude-code",
+    "connector"
+  ],
+  "author": "HirotoHayasaka",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HirotoHayasaka/redash-connector-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HirotoHayasaka/redash-connector-mcp/issues"
+  },
+  "homepage": "https://github.com/HirotoHayasaka/redash-connector-mcp#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.1.0",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.53.0",
+    "@typescript-eslint/parser": "^8.53.0",
+    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/ui": "^4.0.17",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "nock": "^14.0.10",
+    "prettier": "^3.8.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.2.2",
+    "vitest": "^4.0.17"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}

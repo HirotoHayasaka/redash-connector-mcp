@@ -1,0 +1,76 @@
+import nock from 'nock';
+import { mockQuery, mockQueryResult, mockQueriesList, mockDashboard, mockDataSources, mockQueryTags, } from '../fixtures/queries.js';
+export class RedashApiMock {
+    baseUrl;
+    constructor(baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+    mockGetQueries(params) {
+        return nock(this.baseUrl)
+            .get('/api/queries')
+            .query(params || true)
+            .reply(200, mockQueriesList);
+    }
+    mockGetQuery(queryId) {
+        return nock(this.baseUrl).get(`/api/queries/${queryId}`).reply(200, mockQuery);
+    }
+    mockExecuteQuery(queryId, immediate = true) {
+        if (immediate) {
+            return nock(this.baseUrl).post(`/api/queries/${queryId}/results`).reply(200, mockQueryResult);
+        }
+        else {
+            // Mock async job
+            return nock(this.baseUrl)
+                .post(`/api/queries/${queryId}/results`)
+                .reply(200, { job: { id: 'job-123' } });
+        }
+    }
+    mockJobPolling(jobId, iterations = 3) {
+        const mock = nock(this.baseUrl);
+        for (let i = 0; i < iterations - 1; i++) {
+            mock.get(`/api/jobs/${jobId}`).reply(200, { job: { status: 2 } });
+        }
+        mock.get(`/api/jobs/${jobId}`).reply(200, {
+            job: { status: 3, result: mockQueryResult },
+        });
+        return mock;
+    }
+    mockCreateQuery() {
+        return nock(this.baseUrl)
+            .post('/api/queries')
+            .reply(201, { ...mockQuery, id: 999 });
+    }
+    mockUpdateQuery(queryId) {
+        return nock(this.baseUrl).post(`/api/queries/${queryId}`).reply(200, mockQuery);
+    }
+    mockArchiveQuery(queryId) {
+        return nock(this.baseUrl).delete(`/api/queries/${queryId}`).reply(200, { success: true });
+    }
+    mockGetDataSources() {
+        return nock(this.baseUrl).get('/api/data_sources').reply(200, mockDataSources);
+    }
+    mockGetQueryTags() {
+        return nock(this.baseUrl).get('/api/queries/tags').reply(200, mockQueryTags);
+    }
+    mockGetDashboards(params) {
+        return nock(this.baseUrl)
+            .get('/api/dashboards')
+            .query(params || true)
+            .reply(200, {
+            count: 10,
+            page: 1,
+            page_size: 25,
+            results: [mockDashboard],
+        });
+    }
+    mockGetDashboard(dashboardId) {
+        return nock(this.baseUrl).get(`/api/dashboards/${dashboardId}`).reply(200, mockDashboard);
+    }
+    mockNetworkError(endpoint) {
+        return nock(this.baseUrl).get(endpoint).replyWithError('Network connection failed');
+    }
+    mockTimeout(endpoint) {
+        return nock(this.baseUrl).get(endpoint).delayConnection(35000).reply(200, {});
+    }
+}
+//# sourceMappingURL=mockRedashApi.js.map
