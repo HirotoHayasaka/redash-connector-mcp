@@ -117,6 +117,8 @@ Restart Claude Desktop or Claude Code to load the MCP server.
 
 ### Environment Variables
 
+The MCP server requires the following environment variables:
+
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `REDASH_URL` | **Yes** | - | Your Redash instance URL (e.g., `https://redash.example.com`) |
@@ -126,13 +128,24 @@ Restart Claude Desktop or Claude Code to load the MCP server.
 | `REDASH_JOB_POLL_INTERVAL` | No | `1000` | Job polling interval in milliseconds |
 | `LOG_LEVEL` | No | `INFO` | Logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
 
+**When using `claude mcp add`**: Environment variables are passed directly via `--env` flags (no `.env` file needed).
+
+**When running manually or in development**: You can create a `.env` file in your project directory:
+
+```env
+REDASH_URL=https://your-redash-instance.com
+REDASH_API_KEY=your_api_key_here
+REDASH_TIMEOUT=30000
+LOG_LEVEL=INFO
+```
+
 ### Getting Your Redash API Key
 
 1. Log in to your Redash instance
 2. Click your profile icon (top-right corner)
 3. Navigate to **Settings** → **Account**
 4. Find or generate your **API Key** under the "API Key" section
-5. Copy the key and use it in the `REDASH_API_KEY` environment variable
+5. Copy the key and use it as `REDASH_API_KEY`
 
 **Security Note**: Keep your API key confidential. Never commit it to version control.
 
