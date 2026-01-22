@@ -63,13 +63,22 @@ A Model Context Protocol (MCP) server that enables seamless integration between 
 The easiest way to install is using the `claude mcp add` command:
 
 ```bash
-claude mcp add redash-connector-mcp
+claude mcp add redash \
+  --env REDASH_URL=https://your-redash-instance.com \
+  --env REDASH_API_KEY=your_api_key_here \
+  -- npx -y redash-connector-mcp
 ```
 
-After running this command:
-1. You'll be prompted to enter your `REDASH_URL` and `REDASH_API_KEY`
-2. The package will be automatically installed and configured
-3. Restart Claude Desktop/Code to activate the server
+**Replace the following:**
+- `https://your-redash-instance.com` - Your Redash instance URL
+- `your_api_key_here` - Your Redash API key (see [Getting Your Redash API Key](#getting-your-redash-api-key))
+
+This command will:
+1. Automatically install the latest version via npx (no global install needed)
+2. Configure the MCP server with your credentials
+3. Make it available in Claude Desktop/Code
+
+After running this command, restart Claude Desktop/Code to activate the server.
 
 ### Manual Installation
 
