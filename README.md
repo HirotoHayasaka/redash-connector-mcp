@@ -7,6 +7,8 @@
 
 A Model Context Protocol (MCP) server that enables seamless integration between [Redash](https://redash.io/) and Claude AI (Desktop & Code). Query your data warehouse, manage queries, and execute analytics workflows directly through natural language conversations with Claude.
 
+> [日本語版はこちら](./README.ja.md)
+
 ## Table of Contents
 
 - [Features](#features)
@@ -128,9 +130,11 @@ The MCP server requires the following environment variables:
 | `REDASH_JOB_POLL_INTERVAL` | No | `1000` | Job polling interval in milliseconds |
 | `LOG_LEVEL` | No | `INFO` | Logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
 
-**When using `claude mcp add`**: Environment variables are passed directly via `--env` flags (no `.env` file needed).
+**Environment variables can be provided in three ways:**
 
-**When running manually or in development**: You can create a `.env` file in your project directory:
+#### 1. `.env` File (Recommended for team projects)
+
+Create a `.env` file in your project root (where `.mcp.json` is located):
 
 ```env
 REDASH_URL=https://your-redash-instance.com
@@ -138,6 +142,33 @@ REDASH_API_KEY=your_api_key_here
 REDASH_TIMEOUT=30000
 LOG_LEVEL=INFO
 ```
+
+Then reference them with `${VAR}` syntax in `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "redash": {
+      "command": "npx",
+      "args": ["redash-connector-mcp"],
+      "env": {
+        "REDASH_URL": "${REDASH_URL}",
+        "REDASH_API_KEY": "${REDASH_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+This approach keeps secrets out of `.mcp.json`, allowing it to be safely committed to git while `.env` remains in `.gitignore`. The CLI entry point uses `dotenv` with `override: true`, so `.env` values always take precedence.
+
+#### 2. `claude mcp add` Command
+
+Environment variables are passed directly via `--env` flags (no `.env` file needed).
+
+#### 3. Direct values in MCP config
+
+Set values directly in the `env` field of your MCP configuration (not recommended for shared repositories).
 
 ### Getting Your Redash API Key
 
@@ -386,13 +417,13 @@ To test your local build with Claude Desktop/Code:
 
 ### Common Issues
 
-#### Error: "REDASH_URL and REDASH_API_KEY must be provided"
+#### Error: "Missing required environment variables: REDASH_URL, REDASH_API_KEY"
 
 **Cause**: Environment variables are not configured correctly.
 
 **Solution**:
-1. Verify the MCP configuration file exists at `~/.claude/config.json` (macOS/Linux) or `%APPDATA%\Claude\config.json` (Windows)
-2. Ensure `REDASH_URL` and `REDASH_API_KEY` are set in the `env` section
+1. If using `.env` file: Ensure the `.env` file exists in your project root (same directory as `.mcp.json`) and contains `REDASH_URL` and `REDASH_API_KEY`
+2. If using MCP config: Ensure `REDASH_URL` and `REDASH_API_KEY` are set in the `env` section
 3. Restart Claude after making changes
 4. Check the MCP server logs for detailed error messages
 

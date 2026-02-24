@@ -4,10 +4,9 @@
  */
 
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import * as dotenv from 'dotenv';
 import { logger } from './logger.js';
 
-dotenv.config();
+// dotenv は index.ts で既に処理されているので、ここでは不要
 
 // ============================================================================
 // Type Definitions
@@ -123,8 +122,20 @@ function loadConfiguration(): ClientConfig {
   const apiKey = process.env.REDASH_API_KEY || '';
   const timeout = parseInt(process.env.REDASH_TIMEOUT || '30000');
 
+  // デバッグログ
+  console.error('[DEBUG] REDASH_URL:', baseUrl ? 'SET' : 'NOT SET');
+  console.error(
+    '[DEBUG] REDASH_API_KEY:',
+    apiKey ? 'SET (length=' + apiKey.length + ')' : 'NOT SET'
+  );
+  console.error('[DEBUG] process.cwd():', process.cwd());
+  console.error(
+    '[DEBUG] All env vars:',
+    Object.keys(process.env).filter(k => k.startsWith('REDASH'))
+  );
+
   if (!baseUrl || !apiKey) {
-    throw new Error('REDASH_URL and REDASH_API_KEY must be provided in .env file');
+    throw new Error('REDASH_URL and REDASH_API_KEY must be provided');
   }
 
   return { baseUrl, apiKey, timeout };

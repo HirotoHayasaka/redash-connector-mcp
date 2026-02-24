@@ -1,18 +1,18 @@
 {
   "name": "redash-connector-mcp",
-  "version": "1.0.3",
+  "version": "1.0.8",
   "description": "MCP server for Redash integration",
   "type": "module",
   "bin": {
-    "redash-connector-mcp": "dist/index.js"
+    "redash-connector-mcp": "dist/cli.js"
   },
   "main": "./dist/index.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "npx tsc && chmod +x dist/index.js",
-    "start": "node dist/index.js",
+    "build": "npx tsc && chmod +x dist/index.js dist/cli.js",
+    "start": "node dist/cli.js",
     "dev": "tsx src/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

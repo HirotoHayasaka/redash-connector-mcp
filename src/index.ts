@@ -16,10 +16,35 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 import * as dotenv from 'dotenv';
+import * as path from 'path';
+import * as fs from 'fs';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import { redashClient, QueryCreateParams, QueryUpdateParams } from './redashClient.js';
 import { logger } from './logger.js';
 
-dotenv.config();
+// package.jsonからバージョンを読み取る
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packageJson = JSON.parse(readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
+const VERSION = packageJson.version;
+
+// 複数の場所から.envファイルを探す（オプション）
+// 環境変数が既に設定されている場合は、.envファイルは不要
+const possibleEnvPaths = [
+  '.env', // カレントディレクトリ
+  path.join(process.cwd(), '.env'), // カレントディレクトリ（絶対パス）
+  path.join(process.env.HOME || '~', '.env'), // ホームディレクトリ
+];
+
+for (const envPath of possibleEnvPaths) {
+  if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath });
+    break;
+  }
+}
+// .envファイルが見つからなくても続行（環境変数が直接設定されている可能性）
 
 // ============================================================================
 // Server Configuration
@@ -27,8 +52,8 @@ dotenv.config();
 
 const SERVER_CONFIG = {
   name: 'redash-connector-mcp',
-  version: '1.0.0',
-} as const;
+  version: VERSION,
+};
 
 const mcpServer = new Server(SERVER_CONFIG, {
   capabilities: {
